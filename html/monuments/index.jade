@@ -1,0 +1,22 @@
+.row
+  h1.col-xs-12
+    | All Monuments
+    small(data-bind='monuments.length | append ")" | prepend " ("')
+.row
+  .col-xs-6
+    ul.list-unstyled
+      li(data-foreach-monument='monuments')
+        .row
+          .col-xs-6
+            p.lead(data-bind='monument.name')
+          .col-xs-2
+              button.btn(data-route='routes.monuments[monument].edit') Edit
+          .col-xs-2
+              button.btn.btn-danger(data-event-click='destroyMonument | withArguments monument') Delete
+  .col-xs-6
+    .well.well-small
+      p.text-info Click to Edit:
+      div(data-view='LeafletCollectionPointView' data-view-collection='monuments')
+.row
+  .col-xs-12
+    a.btn.btn-primary(data-route='routes.monuments.new') New

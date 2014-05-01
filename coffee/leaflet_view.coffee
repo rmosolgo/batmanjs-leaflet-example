@@ -1,55 +1,3 @@
-Batman.config.pathToApp = window.location.pathname
-Batman.config.usePushState = false
-
-class @App extends Batman.App
-  @root 'monuments#index'
-  @resources 'monuments'
-  @on 'run', ->
-    @_seedData()
-
-
-  # Just to make things interesting, make some data
-  @_seedData: ->
-    total = App.Monument.get('all.length')
-    if total is 0
-      seeds = {
-        "Taj Mahal" : [27.2, 78.0]
-        "Washington Monument" : [38.9, -77],
-        "Eiffel Tower" : [48.8, 2.3],
-        "Great Pyramids" : [29.9, 31.1]
-        "Summer Palace" : [39.9, 116.2]
-      }
-      for name, point of seeds
-        m = new App.Monument(name: name, latitude: point[0], longitude: point[1])
-        m.save()
-
-$ -> App.run()
-
-class App.ApplicationController extends Batman.Controller
-
-class App.MonumentsController extends App.ApplicationController
-  routingKey: 'monuments'
-
-  index: (params) ->
-    @set 'monuments', App.Monument.get('all')
-
-  new: ->
-    @set 'monument', new App.Monument(latitude: 0, longitude: 0)
-    @render(source: 'monuments/edit')
-
-  edit: (params) ->
-    # force integer from params
-    monumentId = +params.id
-    App.Monument.find monumentId, (err, monument) =>
-      @set 'monument', monument.transaction()
-
-  saveMonument: (monument) ->
-    monument.save (err, r) ->
-      throw err if err?
-      Batman.redirect("/")
-
-  destroyMonument: (monument) -> monument.destroy()
-
 # LeafletView puts markers on a map for an item or a collection of items.
 # Items must have `latitude` and `longitude` accessors, which the view will use
 #
@@ -259,9 +207,3 @@ class App.LeafletCollectionPointView extends App.LeafletView
     @_setObserver?.stopObserving()
     @_setObserver = null
     super
-
-class App.Monument extends Batman.Model
-  @resourceName: 'monuments'
-  @persist Batman.LocalStorage
-  @encode 'name', 'latitude', 'longitude'
-  @validate 'name', presence: true

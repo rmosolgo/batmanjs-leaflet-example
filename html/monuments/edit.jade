@@ -1,0 +1,24 @@
+.row
+  h2.page-header.col-xs-12
+    span(data-hideif='monument.isNew' data-bind='"Edit " | append monument.name')
+    span(data-showif='monument.isNew') New Monument
+
+form(data-formfor-m='monument', data-event-submit='saveMonument | withArguments monument')
+  .row(data-showif='monument.errors.length')
+    .alert.alert-danger
+      h3 Uh oh, this monument has errors!
+      .errors
+  .row
+    .form-group.col-xs-12
+      label Name
+      input.form-control(type='text', data-bind='monument.name')
+  .row
+    .col-xs-12
+      p.text-info Click &amp; Drag to Relocate:
+  .row
+    div.col-xs-12(data-view='LeafletPointView' data-view-item='monument' data-view-draggable='true')
+  .row
+    .col-xs-6
+      input.btn.btn-success(type='submit', value='Save')
+    .col-xs-6
+      button.btn(data-route='routes.root') Cancel
